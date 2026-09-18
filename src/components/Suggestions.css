@@ -1,0 +1,130 @@
+.suggestions-wrapper {
+  padding-left: 16px;
+  font-size: 14px;
+}
+
+.current-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.current-user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.current-user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.current-username {
+  font-weight: 600;
+  display: block;
+}
+
+.current-fullname {
+  color: var(--text-secondary);
+}
+
+.switch-btn {
+  color: var(--accent-blue);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.suggestions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.suggestions-title {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.see-all-btn {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.see-all-btn:hover {
+  color: var(--text-secondary);
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.suggestion-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.suggestion-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.suggestion-username {
+  font-weight: 600;
+  display: block;
+}
+
+.suggestion-relation {
+  color: var(--text-secondary);
+  font-size: 12px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.follow-btn {
+  color: var(--accent-blue);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.follow-btn:hover {
+  color: var(--text-primary);
+}
+
+.footer-links {
+  margin-top: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.footer-link::after {
+  content: '·';
+  margin-left: 4px;
+}
+
+.footer-link:last-child::after {
+  content: '';
+}
+
+.footer-copyright {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 16px;
+}

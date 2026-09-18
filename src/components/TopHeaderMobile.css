@@ -1,0 +1,45 @@
+.mobile-header {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 16px;
+    z-index: 990;
+  }
+
+  .mobile-logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    cursor: pointer;
+  }
+
+  .mobile-header-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .mobile-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: opacity 0.2s;
+  }
+
+  .mobile-icon-btn:active {
+    opacity: 0.6;
+  }
+}
