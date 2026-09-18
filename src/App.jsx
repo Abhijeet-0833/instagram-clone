@@ -13,6 +13,7 @@ import Profile from './components/Profile';
 import Explore from './components/Explore';
 import Messages from './components/Messages';
 import Reels from './components/Reels';
+import Toast from './components/Toast';
 import { stories, suggestions } from './data/mockData';
 
 const ProtectedRoute = ({ children }) => {
@@ -42,10 +43,20 @@ const MainLayout = ({ children }) => {
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage('');
+    }, 3500);
+  };
 
   const handlePostCreated = () => {
     setRefreshKey(prev => prev + 1);
+    showToast('Post created successfully!');
   };
 
   return (
@@ -59,12 +70,14 @@ const MainLayout = ({ children }) => {
         onCreateClick={() => setIsModalOpen(true)}
         isNotificationsOpen={isNotificationsOpen}
         setIsNotificationsOpen={setIsNotificationsOpen}
+        isSearchOpen={isSearchOpen}
+        setIsSearchOpen={setIsSearchOpen}
       />
       
       {/* Content wrapper with responsive margins */}
       <div className="content-wrapper">
         <main className="main-content">
-          {React.cloneElement(children, { refreshKey })}
+          {React.cloneElement(children, { refreshKey, showToast })}
         </main>
       </div>
 
@@ -74,6 +87,9 @@ const MainLayout = ({ children }) => {
         onClose={() => setIsModalOpen(false)} 
         onPostCreated={handlePostCreated} 
       />
+
+      {/* Action Toast Feedback */}
+      <Toast message={toastMessage} onClose={() => setToastMessage('')} />
     </div>
   );
 };

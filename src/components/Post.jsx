@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './Post.css';
 
-const Post = ({ post }) => {
+const Post = ({ post, showToast }) => {
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likesCount, setLikesCount] = useState(post.likes);
   const [isSaved, setIsSaved] = useState(false);
   const [showHeartPop, setShowHeartPop] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState(post.comments || []);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+
+  const commentInputRef = useRef(null);
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -43,6 +46,21 @@ const Post = ({ post }) => {
     }, 900);
   };
 
+  const handleShareClick = () => {
+    const postUrl = `${window.location.origin}/profile/${post.user.username}`;
+    navigator.clipboard.writeText(postUrl);
+    if (showToast) {
+      showToast('Link copied to clipboard!');
+    }
+  };
+
+  const handleBookmarkToggle = () => {
+    setIsSaved(!isSaved);
+    if (showToast) {
+      showToast(isSaved ? 'Removed from saved' : 'Saved to collection');
+    }
+  };
+
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!commentText.trim()) return;
@@ -60,6 +78,9 @@ const Post = ({ post }) => {
         const data = await res.json();
         setComments([...comments, data.comment]);
         setCommentText('');
+        if (showToast) {
+          showToast('Comment posted!');
+        }
       }
     } catch (error) {
       console.error('Comment failed', error);
@@ -79,10 +100,10 @@ const Post = ({ post }) => {
             {post.location && <span className="post-location">{post.location}</span>}
           </div>
         </div>
-        <MoreHorizontal className="post-more" size={20} />
+        <MoreHorizontal className="post-more" size={20} onClick={() => setShowMoreMenu(true)} />
       </div>
 
-      {/* Post Image Container with Double Tap 2D Animation */}
+      {/* Post Image Container with Double Tap Animation */}
       <div className="post-image-container" onDoubleClick={handleDoubleTap}>
         <img 
           src={post.image.startsWith('/') ? `http://localhost:5000${post.image}` : post.image} 
@@ -106,20 +127,28 @@ const Post = ({ post }) => {
             fill={isLiked ? "#ff3040" : "none"}
             color={isLiked ? "#ff3040" : "currentColor"}
           />
-          <MessageCircle className="action-icon hover-scale" size={24} />
-          <Send className="action-icon hover-scale" size={24} />
+          <MessageCircle 
+            className="action-icon hover-scale" 
+            size={24} 
+            onClick={() => commentInputRef.current?.focus()}
+          />
+          <Send 
+            className="action-icon hover-scale" 
+            size={24} 
+            onClick={handleShareClick}
+          />
         </div>
         <div className="action-right">
           <Bookmark 
             className={`action-icon ${isSaved ? 'saved-pop' : ''}`} 
             size={24} 
-            onClick={() => setIsSaved(!isSaved)}
+            onClick={handleBookmarkToggle}
             fill={isSaved ? "currentColor" : "none"}
           />
         </div>
       </div>
 
-      {/* Likes */}
+      {/* Likes Count */}
       <div className="post-likes">
         {likesCount.toLocaleString()} likes
       </div>
@@ -144,9 +173,10 @@ const Post = ({ post }) => {
         </div>
       ))}
 
-      {/* Comment Form */}
+      {/* Comment Input */}
       <form className="add-comment" onSubmit={handleCommentSubmit}>
         <input 
+          ref={commentInputRef}
           type="text" 
           placeholder="Add a comment..." 
           className="comment-input" 
@@ -155,6 +185,23 @@ const Post = ({ post }) => {
         />
         <button type="submit" className="post-btn" disabled={!commentText.trim()}>Post</button>
       </form>
+
+      {/* More Options Modal */}
+      {showMoreMenu && (
+        <div className="modal-overlay" onClick={() => setShowMoreMenu(false)}>
+          <div className="post-more-menu" onClick={e => e.stopPropagation()}>
+            <button className="more-menu-item text-danger" onClick={() => { setShowMoreMenu(false); handleShareClick(); }}>
+              Copy link
+            </button>
+            <button className="more-menu-item" onClick={() => { setShowMoreMenu(false); navigate(`/profile/${post.user.username}`); }}>
+              Go to profile
+            </button>
+            <button className="more-menu-item" onClick={() => setShowMoreMenu(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </article>
   );
 };

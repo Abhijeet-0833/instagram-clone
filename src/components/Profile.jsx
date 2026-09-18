@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Grid, Heart, MessageCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import EditProfileModal from './EditProfileModal';
 import './Profile.css';
 
 const Profile = () => {
@@ -10,6 +11,7 @@ const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -53,6 +55,14 @@ const Profile = () => {
     }
   };
 
+  const handleProfileUpdated = ({ fullName, bio }) => {
+    setProfile(prev => ({
+      ...prev,
+      fullName,
+      bio
+    }));
+  };
+
   if (loading) return <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>Loading profile...</div>;
   if (!profile) return <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>User not found</div>;
 
@@ -69,7 +79,9 @@ const Profile = () => {
           <div className="profile-title-row">
             <h2 className="profile-username">{profile.username}</h2>
             {isOwnProfile ? (
-              <button className="profile-action-btn">Edit profile</button>
+              <button className="profile-action-btn" onClick={() => setIsEditModalOpen(true)}>
+                Edit profile
+              </button>
             ) : (
               <button 
                 className={`profile-action-btn ${profile.isFollowing ? '' : 'follow'}`} 
@@ -116,6 +128,13 @@ const Profile = () => {
           </div>
         ))}
       </div>
+
+      <EditProfileModal 
+        profile={profile}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onProfileUpdated={handleProfileUpdated}
+      />
     </div>
   );
 };

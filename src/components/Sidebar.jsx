@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Home, Search, Compass, Film, MessageCircle, Heart, PlusSquare, Menu, Camera, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Notifications from './Notifications';
+import SearchPanel from './SearchPanel';
 import './Sidebar.css';
 
-const Sidebar = ({ user, onCreateClick, isNotificationsOpen, setIsNotificationsOpen }) => {
+const Sidebar = ({ 
+  user, 
+  onCreateClick, 
+  isNotificationsOpen, 
+  setIsNotificationsOpen,
+  isSearchOpen,
+  setIsSearchOpen 
+}) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,7 +37,10 @@ const Sidebar = ({ user, onCreateClick, isNotificationsOpen, setIsNotificationsO
             <span className={`nav-text ${isActive('/') ? 'bold' : ''}`}>Home</span>
           </a>
 
-          <a className="nav-item nav-item-hide-mobile">
+          <a 
+            className="nav-item nav-item-hide-mobile"
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+          >
             <Search size={24} />
             <span className="nav-text">Search</span>
           </a>
@@ -89,12 +100,13 @@ const Sidebar = ({ user, onCreateClick, isNotificationsOpen, setIsNotificationsO
             <LogOut size={24} />
             <span className="nav-text">Logout</span>
           </a>
-          <a className="nav-item">
+          <a className="nav-item" onClick={logout}>
             <Menu size={24} />
             <span className="nav-text">More</span>
           </a>
         </div>
 
+        <SearchPanel isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         <Notifications isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
       </div>
     </>
