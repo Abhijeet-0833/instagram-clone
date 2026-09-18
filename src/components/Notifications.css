@@ -1,22 +1,26 @@
 .notifications-panel {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: var(--nav-width);
   width: 397px;
   height: 100vh;
   background-color: var(--bg-primary);
   border-right: 1px solid var(--border-color);
-  z-index: 100;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 105;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   transform: translateX(-100%);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
   overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .notifications-panel.open {
   transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .notifications-header {
@@ -38,6 +42,11 @@
   align-items: center;
   padding: 12px 24px;
   gap: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.notification-item:hover {
+  background-color: var(--bg-secondary);
 }
 
 .notification-avatar {
@@ -70,4 +79,20 @@
   height: 44px;
   border-radius: 4px;
   object-fit: cover;
+}
+
+@media (max-width: 1159px) and (min-width: 768px) {
+  .notifications-panel {
+    left: var(--nav-width-tablet);
+  }
+}
+
+@media (max-width: 767px) {
+  .notifications-panel {
+    left: 0;
+    top: 50px;
+    width: 100%;
+    height: calc(100vh - 100px);
+    border-right: none;
+  }
 }

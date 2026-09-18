@@ -26,6 +26,10 @@ app.use('/api/stories', storyRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
 
+app.get('/', (req, res) => {
+  res.json({ message: 'Instagram Clone REST API Server is running!' });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
