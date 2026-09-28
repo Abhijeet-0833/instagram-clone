@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { X, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './CreatePostModal.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
   const [file, setFile] = useState(null);
@@ -32,7 +34,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
     formData.append('location', location);
 
     try {
-      const res = await fetch('http://localhost:5000/api/posts', {
+      const res = await fetch(`${API_BASE_URL}/api/posts`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData

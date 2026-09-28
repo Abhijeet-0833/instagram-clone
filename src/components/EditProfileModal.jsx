@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './EditProfileModal.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const EditProfileModal = ({ profile, isOpen, onClose, onProfileUpdated }) => {
   const [fullName, setFullName] = useState(profile?.fullName || '');
@@ -16,7 +18,7 @@ const EditProfileModal = ({ profile, isOpen, onClose, onProfileUpdated }) => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/users/edit', {
+      const res = await fetch(`${API_BASE_URL}/api/users/edit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

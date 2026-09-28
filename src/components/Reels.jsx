@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Heart, MessageCircle, Send, Bookmark, Music, Volume2, VolumeX, MoreVertical } from 'lucide-react';
 import './Reels.css';
 

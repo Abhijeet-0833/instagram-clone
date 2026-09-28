@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, cloneElement } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './index.css';
@@ -77,7 +77,7 @@ const MainLayout = ({ children }) => {
       {/* Content wrapper with responsive margins */}
       <div className="content-wrapper">
         <main className="main-content">
-          {React.cloneElement(children, { refreshKey, showToast })}
+          {cloneElement(children, { refreshKey, showToast })}
         </main>
       </div>
 

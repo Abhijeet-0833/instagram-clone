@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './Post.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Post = ({ post, showToast }) => {
   const [isLiked, setIsLiked] = useState(post.isLiked);
@@ -25,7 +27,7 @@ const Post = ({ post, showToast }) => {
     setLikesCount(prev => (nextLikedState ? prev + (isLiked ? 0 : 1) : prev - 1));
 
     try {
-      await fetch(`http://localhost:5000/api/posts/${post.id}/like`, {
+      await fetch(`${API_BASE_URL}/api/posts/${post.id}/like`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -66,7 +68,7 @@ const Post = ({ post, showToast }) => {
     if (!commentText.trim()) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/posts/${post.id}/comment`, {
+      const res = await fetch(`${API_BASE_URL}/api/posts/${post.id}/comment`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -93,7 +95,7 @@ const Post = ({ post, showToast }) => {
       <div className="post-header">
         <div className="post-user-info" onClick={() => navigate(`/profile/${post.user.username}`)}>
           <div className="avatar-story-ring">
-            <img src={post.user.avatar || 'https://via.placeholder.com/150'} alt={post.user.username} className="post-avatar" />
+            <img src={post.user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'} alt={post.user.username} className="post-avatar" />
           </div>
           <div className="flex flex-col">
             <span className="post-username">{post.user.username} <span className="post-time">• {new Date(post.timestamp).toLocaleDateString()}</span></span>
@@ -106,7 +108,7 @@ const Post = ({ post, showToast }) => {
       {/* Post Image Container with Double Tap Animation */}
       <div className="post-image-container" onDoubleClick={handleDoubleTap}>
         <img 
-          src={post.image.startsWith('/') ? `http://localhost:5000${post.image}` : post.image} 
+          src={post.image.startsWith('/') ? `${API_BASE_URL}${post.image}` : post.image} 
           alt="Post content" 
           className="post-image" 
         />

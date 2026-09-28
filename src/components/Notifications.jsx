@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Notifications.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Notifications = ({ isOpen, onClose }) => {
   const [notifications, setNotifications] = useState([]);
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchNotifications();
-    }
-  }, [isOpen, token]);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/notifications', {
+      const res = await fetch(`${API_BASE_URL}/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -26,7 +22,13 @@ const Notifications = ({ isOpen, onClose }) => {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchNotifications();
+    }
+  }, [isOpen, fetchNotifications]);
 
   const getTimeAgo = (dateStr) => {
     const date = new Date(dateStr);
@@ -73,7 +75,7 @@ const Notifications = ({ isOpen, onClose }) => {
               </div>
               {notif.postImage && (
                 <img 
-                  src={notif.postImage.startsWith('/') ? `http://localhost:5000${notif.postImage}` : notif.postImage} 
+                  src={notif.postImage.startsWith('/') ? `${API_BASE_URL}${notif.postImage}` : notif.postImage} 
                   alt="Post" 
                   className="notification-target"
                 />

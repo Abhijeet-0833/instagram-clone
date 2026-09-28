@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Heart, MessageCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './Explore.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Explore = () => {
   const [posts, setPosts] = useState([]);
@@ -15,7 +17,7 @@ const Explore = () => {
   useEffect(() => {
     const fetchExplore = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/posts/explore', {
+        const res = await fetch(`${API_BASE_URL}/api/posts/explore`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -38,7 +40,7 @@ const Explore = () => {
         return;
       }
       try {
-        const res = await fetch(`http://localhost:5000/api/users/search?q=${encodeURIComponent(searchQuery)}`, {
+        const res = await fetch(`${API_BASE_URL}/api/users/search?q=${encodeURIComponent(searchQuery)}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -109,7 +111,7 @@ const Explore = () => {
         {posts.map(post => (
           <div key={post.id} className="explore-item" onClick={() => navigate(`/profile/${post.user.username}`)}>
             <img 
-              src={post.image.startsWith('/') ? `http://localhost:5000${post.image}` : post.image} 
+              src={post.image.startsWith('/') ? `${API_BASE_URL}${post.image}` : post.image} 
               alt="Explore" 
               className="explore-image" 
             />

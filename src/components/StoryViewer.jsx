@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import './StoryViewer.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const StoryViewer = ({ groupedStory, onClose, onNextUser, onPrevUser }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,10 +11,27 @@ const StoryViewer = ({ groupedStory, onClose, onNextUser, onPrevUser }) => {
   const items = groupedStory?.items || [];
   const currentItem = items[currentIndex];
 
+  const handleNext = useCallback(() => {
+    setProgress(0);
+    if (currentIndex < items.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+    } else {
+      onNextUser();
+    }
+  }, [currentIndex, items.length, onNextUser]);
+
+  const handlePrev = useCallback(() => {
+    setProgress(0);
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    } else {
+      onPrevUser();
+    }
+  }, [currentIndex, onPrevUser]);
+
   useEffect(() => {
     if (!currentItem) return;
 
-    setProgress(0);
     const duration = 5000;
     const intervalTime = 50;
     const step = (100 / (duration / intervalTime));
@@ -29,23 +48,7 @@ const StoryViewer = ({ groupedStory, onClose, onNextUser, onPrevUser }) => {
     }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [currentIndex, currentItem]);
-
-  const handleNext = () => {
-    if (currentIndex < items.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      onNextUser();
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      onPrevUser();
-    }
-  };
+  }, [currentIndex, currentItem, handleNext]);
 
   if (!groupedStory || !currentItem) return null;
 
@@ -74,7 +77,7 @@ const StoryViewer = ({ groupedStory, onClose, onNextUser, onPrevUser }) => {
           <span className="story-header-username">{groupedStory.user.username}</span>
         </div>
 
-        <img src={`http://localhost:5000${currentItem.image}`} alt="Story" className="story-media" />
+        <img src={currentItem.image.startsWith('/') ? `${API_BASE_URL}${currentItem.image}` : currentItem.image} alt="Story" className="story-media" />
 
         <div className="story-nav left" onClick={handlePrev}>
           <ChevronLeft color="white" size={40} />

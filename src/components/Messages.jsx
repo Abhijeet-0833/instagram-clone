@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Messages.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Messages = () => {
   const [conversations, setConversations] = useState([]);
@@ -11,27 +13,9 @@ const Messages = () => {
   const messagesEndRef = useRef(null);
   const { user: currentUser, token } = useAuth();
 
-  useEffect(() => {
-    fetchConversations();
-  }, [token]);
-
-  useEffect(() => {
-    if (activeChat) {
-      fetchMessages(activeChat.id);
-      const interval = setInterval(() => {
-        fetchMessages(activeChat.id);
-      }, 3000);
-      return () => clearInterval(interval);
-    }
-  }, [activeChat, token]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/messages/conversations', {
+      const res = await fetch(`${API_BASE_URL}/api/messages/conversations`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -41,11 +25,11 @@ const Messages = () => {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [token]);
 
-  const fetchMessages = async (userId) => {
+  const fetchMessages = useCallback(async (userId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/messages/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/messages/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -55,14 +39,28 @@ const Messages = () => {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
+
+  useEffect(() => {
+    if (activeChat) {
+      fetchMessages(activeChat.id);
+      const interval = setInterval(() => {
+        fetchMessages(activeChat.id);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [activeChat, fetchMessages]);
 
   const handleSend = async (e) => {
     e.preventDefault();
     if (!inputText.trim() || !activeChat) return;
 
     try {
-      const res = await fetch('http://localhost:5000/api/messages', {
+      const res = await fetch(`${API_BASE_URL}/api/messages`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

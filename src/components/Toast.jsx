@@ -1,4 +1,3 @@
-import React from 'react';
 import './Toast.css';
 
 const Toast = ({ message, onClose }) => {

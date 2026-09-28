@@ -1,19 +1,20 @@
-import React from 'react';
 import './Suggestions.css';
 
 const Suggestions = ({ currentUser, suggestions }) => {
   return (
     <div className="suggestions-wrapper">
-      <div className="current-user">
-        <div className="current-user-info">
-          <img src={currentUser.avatar} alt={currentUser.username} className="current-user-avatar hover-scale" />
-          <div>
-            <span className="current-username">{currentUser.username}</span>
-            <span className="current-fullname">{currentUser.fullName}</span>
+      {currentUser && (
+        <div className="current-user">
+          <div className="current-user-info">
+            <img src={currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'} alt={currentUser.username} className="current-user-avatar hover-scale" />
+            <div>
+              <span className="current-username">{currentUser.username}</span>
+              <span className="current-fullname">{currentUser.fullName}</span>
+            </div>
           </div>
+          <button className="switch-btn">Switch</button>
         </div>
-        <button className="switch-btn">Switch</button>
-      </div>
+      )}
 
       <div className="suggestions-header">
         <span className="suggestions-title">Suggested for you</span>

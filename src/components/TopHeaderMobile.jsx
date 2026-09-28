@@ -1,4 +1,3 @@
-import React from 'react';
 import { Heart, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './TopHeaderMobile.css';

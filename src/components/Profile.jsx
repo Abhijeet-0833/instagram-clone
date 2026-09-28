@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Grid, Heart, MessageCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import EditProfileModal from './EditProfileModal';
 import './Profile.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Profile = () => {
   const { username } = useParams();
@@ -17,7 +19,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/users/${username}`, {
+        const res = await fetch(`${API_BASE_URL}/api/users/${username}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -38,7 +40,7 @@ const Profile = () => {
 
   const handleFollow = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/users/${profile.id}/follow`, {
+      const res = await fetch(`${API_BASE_URL}/api/users/${profile.id}/follow`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -114,7 +116,7 @@ const Profile = () => {
       <div className="profile-grid">
         {posts.map(post => (
           <div key={post.id} className="grid-item">
-            <img src={post.image.startsWith('/') ? `http://localhost:5000${post.image}` : post.image} alt="Post" className="grid-image" />
+            <img src={post.image.startsWith('/') ? `${API_BASE_URL}${post.image}` : post.image} alt="Post" className="grid-image" />
             <div className="grid-overlay">
               <div className="grid-stat">
                 <Heart fill="white" size={20} />

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './SearchPanel.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const SearchPanel = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
@@ -20,7 +22,7 @@ const SearchPanel = ({ isOpen, onClose }) => {
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/users/search?q=${encodeURIComponent(query)}`, {
+        const res = await fetch(`${API_BASE_URL}/api/users/search?q=${encodeURIComponent(query)}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {

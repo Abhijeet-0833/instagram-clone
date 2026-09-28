@@ -1,4 +1,3 @@
-import React from 'react';
 import { Home, Search, Compass, Film, MessageCircle, Heart, PlusSquare, Menu, Camera, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
